@@ -1,7 +1,7 @@
 {
   "name": "amberg-react-task",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -10,8 +10,19 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@emotion/styled": "^11.14.0",
+    "@hookform/resolvers": "^2.9.10",
+    "@mui/material": "^6.4.5",
+    "@mui/styled-engine-sc": "^6.4.3",
+    "@tanstack/react-query": "^5.66.9",
+    "axios": "^1.2.0",
+    "date-fns": "^2.29.3",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "react-hook-form": "^7.34.0",
+    "react-router-dom": "^6.4.0",
+    "styled-components": "^6.1.15",
+    "zod": "^3.24.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.19.0",
