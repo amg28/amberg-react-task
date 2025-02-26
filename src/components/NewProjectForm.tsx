@@ -1,50 +1,93 @@
-import React from "react";
+import { forwardRef, useImperativeHandle } from "react";
+import { useForm, Controller } from "react-hook-form";
+import { TextField, Box, Grid2 as Grid } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { useProjects } from "../hooks/useProjects";
+import { ProjectInfo, projectInfoSchema as schema } from "../data/schema";
+import { zodResolver } from "@hookform/resolvers/zod/src/zod.js";
+import TemplateSelector from "./inputs/TemplateSelector";
 
-const NewProjectForm: React.FC = () => {
+export interface NewProjectFormRef {
+  submitForm: () => void;
+}
+
+const NewProjectForm = forwardRef<NewProjectFormRef>((_, ref) => {
+  const navigate = useNavigate();
+  const { createProject } = useProjects();
+
+  const { control, handleSubmit } = useForm<ProjectInfo>({
+    resolver: zodResolver(schema),
+  });
+
+  const onSubmit = (data: ProjectInfo) => {
+    createProject(
+      { ...data },
+      {
+        onSuccess: () => navigate("/"),
+        onError: (error) => console.error(error),
+      }
+    );
+  };
+
+  // Expose the submit function through the ref
+  useImperativeHandle(ref, () => ({
+    submitForm: () => handleSubmit(onSubmit)(),
+  }));
+
   return (
-    <>New Project</>
-    // <form onSubmit={handleSubmit(onSubmit)}>
-    //   <Controller
-    //     name="projectName"
-    //     control={control}
-    //     render={({ field }) => (
-    //       <TextField
-    //         {...field}
-    //         label="Project Name"
-    //         error={!!errors.projectName}
-    //         helperText={errors.projectName?.message}
-    //       />
-    //     )}
-    //   />
-    //   <Controller
-    //     name="lineSectionName"
-    //     control={control}
-    //     render={({ field }) => (
-    //       <TextField
-    //         {...field}
-    //         label="Line Section Name"
-    //         error={!!errors.lineSectionName}
-    //         helperText={errors.lineSectionName?.message}
-    //       />
-    //     )}
-    //   />
-    //   <Controller
-    //     name="trackName"
-    //     control={control}
-    //     render={({ field }) => (
-    //       <TextField
-    //         {...field}
-    //         label="Track Name"
-    //         error={!!errors.trackName}
-    //         helperText={errors.trackName?.message}
-    //       />
-    //     )}
-    //   />
-    //   <Button type="submit" variant="contained">
-    //     Create Project
-    //   </Button>
-    // </form>
+    <Box component="form" sx={{ flexGrow: 1 }}>
+      <Grid container spacing={2} sx={{ p: 2 }}>
+        <Grid size={{ xs: 12, sm: 6 }}>
+          <Controller
+            name="name"
+            control={control}
+            render={({ field, fieldState }) => (
+              <TextField
+                {...field}
+                label="Name"
+                fullWidth
+                error={!!fieldState.error}
+                helperText={fieldState.error?.message}
+              />
+            )}
+          />
+        </Grid>
+        <Grid size={{ xs: 12, sm: 6 }}>
+          <Controller
+            name="lineSectionName"
+            control={control}
+            render={({ field, fieldState }) => (
+              <TextField
+                {...field}
+                label="Line Section Name"
+                fullWidth
+                error={!!fieldState.error}
+                helperText={fieldState.error?.message}
+              />
+            )}
+          />
+        </Grid>
+        <Grid size={{ xs: 12, sm: 6 }}>
+          <Controller
+            name="trackName"
+            control={control}
+            render={({ field, fieldState }) => (
+              <TextField
+                {...field}
+                label="Track Name"
+                fullWidth
+                error={!!fieldState.error}
+                helperText={fieldState.error?.message}
+              />
+            )}
+          />
+        </Grid>
+        <Grid size={{ xs: 12, sm: 6 }}>
+          <TemplateSelector control={control} name="projectTemplateId" />
+        </Grid>
+      </Grid>
+    </Box>
   );
-};
+});
 
 export default NewProjectForm;

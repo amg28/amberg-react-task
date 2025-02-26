@@ -3,11 +3,18 @@ import { getProjects, createProject } from "../services/apiService";
 import { useState } from "react";
 import { ProjectsData, ProjectInfo } from "../data/schema";
 
+enum SortDirection {
+  ASCENDING = 1,
+  DESCENDING = -1,
+}
+
 export const useProjects = () => {
   const queryClient = useQueryClient();
 
   // Sorting & Pagination State
-  const [direction, setDirection] = useState<1 | -1>(1); // 1 = Ascending, -1 = Descending
+  const [direction, setDirection] = useState<SortDirection>(
+    SortDirection.ASCENDING
+  );
   const [cursor, setCursor] = useState<string | undefined>(undefined);
 
   // 🛠 Fetch Projects with React Query & Zod Validation
@@ -34,7 +41,11 @@ export const useProjects = () => {
   };
 
   const toggleSort = () => {
-    setDirection((prev) => (prev === 1 ? -1 : 1));
+    setDirection((prev) =>
+      prev === SortDirection.ASCENDING
+        ? SortDirection.DESCENDING
+        : SortDirection.ASCENDING
+    );
     setCursor(undefined); // Reset pagination when sorting changes
     refetch();
   };

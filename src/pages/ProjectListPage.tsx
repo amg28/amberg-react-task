@@ -1,9 +1,6 @@
-// src/pages/ProjectListPage.tsx
-import { FC, useEffect, useState } from "react";
+import { FC } from "react";
 import PageLayout from "../layout/PageLayout";
 import ProjectList from "../components/ProjectList";
-import { Project, ProjectsData } from "../data/schema";
-import { getProjects } from "../services/apiService";
 import {
   Box,
   Button,
@@ -12,8 +9,10 @@ import {
   MenuItem,
   Select,
   styled,
+  CircularProgress,
 } from "@mui/material";
 import { Link } from "react-router-dom";
+import { useProjects } from "../hooks/useProjects";
 
 const StyledHeaderGroup = styled(Box)(({ theme }) => ({
   display: "flex",
@@ -30,23 +29,17 @@ const StyledDropDown = styled(FormControl)(({ theme }) => ({
 }));
 
 const ProjectListPage: FC = () => {
-  const [projects, setProjects] = useState<Project[]>();
-  const [cursor, setCursor] = useState<string | null>(null);
-  const [ascDirection, setAscDirection] = useState<number>(1);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const data: ProjectsData = await getProjects(
-        ascDirection,
-        cursor || undefined
-      );
-      if (data) {
-        setProjects(data.projects);
-        setCursor(data.next || null);
-      }
-    };
-    fetchData();
-  }, [ascDirection, cursor]);
+  const {
+    projects,
+    isLoading,
+    // error,
+    loadNext,
+    loadPrev,
+    hasNext,
+    hasPrev,
+    toggleSort,
+    direction,
+  } = useProjects();
 
   return (
     <PageLayout
@@ -58,11 +51,7 @@ const ProjectListPage: FC = () => {
           </Button>
           <StyledDropDown variant="outlined">
             <InputLabel>Order</InputLabel>
-            <Select
-              value={ascDirection}
-              onChange={(e) => setAscDirection(Number(e.target.value))}
-              label="Order"
-            >
+            <Select value={direction} onChange={toggleSort} label="Order">
               <MenuItem value={1}>A-Z</MenuItem>
               <MenuItem value={-1}>Z-A</MenuItem>
             </Select>
@@ -70,7 +59,21 @@ const ProjectListPage: FC = () => {
         </StyledHeaderGroup>
       }
     >
-      <ProjectList projects={projects} />
+      {isLoading ? (
+        <CircularProgress />
+      ) : (
+        <>
+          <ProjectList projects={projects} />
+          <Box display="flex" justifyContent="space-between" mt={2}>
+            <Button variant="contained" onClick={loadPrev} disabled={!hasPrev}>
+              Previous
+            </Button>
+            <Button variant="contained" onClick={loadNext} disabled={!hasNext}>
+              Next
+            </Button>
+          </Box>
+        </>
+      )}
     </PageLayout>
   );
 };

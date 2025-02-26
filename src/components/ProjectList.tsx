@@ -12,16 +12,15 @@ const ProjectList: FC<ProjectListProps> = ({ projects }) => {
   return (
     <Box>
       <Box mt={2}>
-        <Grid container spacing={2}>
-          {projects &&
-            projects.map((project) => (
-              <Grid size={{ xs: 12, sm: 6, md: 4, lg: 2 }} key={project.id}>
-                <ProjectCard
-                  name={project.projectInfo.name}
-                  lastModified={project.modifiedDate}
-                />
-              </Grid>
-            ))}
+        <Grid container spacing={2} columns={5}>
+          {projects?.map((project) => (
+            <Grid key={project.id} size={{ xs: 5, sm: 2.5, md: 1 }}>
+              <ProjectCard
+                name={project.projectInfo.name}
+                lastModified={project.modifiedDate}
+              />
+            </Grid>
+          ))}
         </Grid>
       </Box>
     </Box>

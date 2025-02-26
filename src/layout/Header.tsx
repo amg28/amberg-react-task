@@ -1,6 +1,7 @@
 // src/layout/Header.tsx
 import React, { ReactNode } from "react";
 import { Box, Typography, Stack, styled, Divider } from "@mui/material";
+import { Link } from "react-router-dom";
 
 interface HeaderProps {
   subtitle?: string;
@@ -18,7 +19,9 @@ const StyledHeaderContainer = styled(Box)(({ theme }) => ({
 const Header: React.FC<HeaderProps> = ({ subtitle, actions }) => {
   return (
     <Box>
-      <Typography variant="h4">Amberg Entry Task UI</Typography>
+      <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
+        <Typography variant="h4">Amberg Entry Task UI</Typography>
+      </Link>
       <Divider />
       <StyledHeaderContainer>
         {subtitle && (

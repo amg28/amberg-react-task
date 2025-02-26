@@ -2,42 +2,16 @@ import { z } from "zod";
 
 const projectInfoSchema = z.object({
   name: z.string(),
-  number: z.string(),
-  comment: z.string().nullable().optional(),
-  start: z
-    .object({
-      name: z.string(),
-      stationing: z.number(),
-    })
-    .optional(),
-  end: z
-    .object({
-      name: z.string(),
-      stationing: z.number(),
-    })
-    .optional(),
+  lineSectionName: z.string().nullable().optional(),
+  trackName: z.string().nullable().optional(),
+  projectTemplateId: z.string().nullable().optional(),
 });
 
-const customerInfoSchema = z.object({
-  homePage: z.string().url().optional(),
-});
-
-const serviceProviderInfoSchema = z.object({}).optional();
-
-const statisticsSchema = z.object({
-  oldestMeasurementCreatedDate: z.string().datetime(),
-  newestMeasurementCreatedDate: z.string().datetime(),
-});
-
+// there are more fields, but these are the ones that are used for task
 const projectSchema = z.object({
   id: z.string(),
   projectInfo: projectInfoSchema,
-  customerInfo: customerInfoSchema,
-  serviceProviderInfo: serviceProviderInfoSchema,
-  createdDate: z.string().datetime(),
   modifiedDate: z.string().datetime(),
-  statistics: statisticsSchema,
-  eTag: z.string(),
 });
 
 const projectsResponseSchema = z.object({
@@ -46,12 +20,20 @@ const projectsResponseSchema = z.object({
   next: z.string().optional(),
 });
 
+export const projectTemplateSchema = z.object({
+  id: z.string().uuid(),
+  name: z.string(),
+  isPredefined: z.boolean(),
+  eTag: z.string(),
+});
+
+export const projectTemplateListSchema = z.array(projectTemplateSchema);
+
 export type ProjectsData = z.infer<typeof projectsResponseSchema>;
 export type Project = z.infer<typeof projectSchema>;
 export type ProjectItem = ProjectsData["projects"][0];
 export type ProjectInfo = z.infer<typeof projectInfoSchema>;
-export type CustomerInfo = z.infer<typeof customerInfoSchema>;
-export type ServiceProviderInfo = z.infer<typeof serviceProviderInfoSchema>;
-export type Statistics = z.infer<typeof statisticsSchema>;
+export type ProjectTemplate = z.infer<typeof projectTemplateSchema>;
+export type ProjectTemplateList = z.infer<typeof projectTemplateListSchema>;
 
 export { projectInfoSchema, projectSchema, projectsResponseSchema };

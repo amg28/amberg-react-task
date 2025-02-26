@@ -4,6 +4,7 @@ import {
   projectsResponseSchema,
   projectInfoSchema,
   projectSchema,
+  projectTemplateListSchema,
 } from "../data/schema";
 
 const API_BASE_URL = "https://amberg-rail-project-dev.azurewebsites.net/api/v1";
@@ -35,12 +36,22 @@ export const createProject = async (projectData: ProjectInfo) => {
     const response = await api.post("/project", {
       ...projectData,
       number: "1",
-      projectTemplateId: "f94caceb-103b-4bae-9ccd-2044840d29d9",
     });
 
     return projectSchema.parse(response.data);
   } catch (error) {
     console.error("API Error:", error);
     throw error;
+  }
+};
+
+export const fetchProjectTemplates = async () => {
+  try {
+    const response = await api.get("/projectTemplate/list");
+
+    return projectTemplateListSchema.parse(response.data);
+  } catch (error) {
+    console.error("Error fetching project templates:", error);
+    return [];
   }
 };
