@@ -11,20 +11,18 @@ enum SortDirection {
 export const useProjects = () => {
   const queryClient = useQueryClient();
 
-  // Sorting & Pagination State
   const [direction, setDirection] = useState<SortDirection>(
     SortDirection.ASCENDING
   );
   const [cursor, setCursor] = useState<string | undefined>(undefined);
 
-  // 🛠 Fetch Projects with React Query & Zod Validation
   const { data, error, isLoading, isFetching, refetch } =
     useQuery<ProjectsData>({
       queryKey: ["projects", direction, cursor],
       queryFn: () => getProjects(direction, cursor),
+      staleTime: 1000 * 60 * 5,
     });
 
-  // 🛠 Create Project Mutation (Validates before sending)
   const createProjectMutation = useMutation({
     mutationFn: (projectData: ProjectInfo) => createProject(projectData),
     onSuccess: () => {

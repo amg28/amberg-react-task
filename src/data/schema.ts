@@ -7,6 +7,13 @@ const projectInfoSchema = z.object({
   projectTemplateId: z.string().nullable().optional(),
 });
 
+const newProjectValidationSchema = z.object({
+  name: z.string(),
+  lineSectionName: z.string(),
+  trackName: z.string(),
+  projectTemplateId: z.string(),
+});
+
 // there are more fields, but these are the ones that are used for task
 const projectSchema = z.object({
   id: z.string(),
@@ -21,19 +28,22 @@ const projectsResponseSchema = z.object({
 });
 
 export const projectTemplateSchema = z.object({
-  id: z.string().uuid(),
+  id: z.string(),
   name: z.string(),
-  isPredefined: z.boolean(),
-  eTag: z.string(),
 });
 
 export const projectTemplateListSchema = z.array(projectTemplateSchema);
 
 export type ProjectsData = z.infer<typeof projectsResponseSchema>;
 export type Project = z.infer<typeof projectSchema>;
-export type ProjectItem = ProjectsData["projects"][0];
+export type ProjectItem = ProjectsData["projects"][number];
 export type ProjectInfo = z.infer<typeof projectInfoSchema>;
 export type ProjectTemplate = z.infer<typeof projectTemplateSchema>;
 export type ProjectTemplateList = z.infer<typeof projectTemplateListSchema>;
 
-export { projectInfoSchema, projectSchema, projectsResponseSchema };
+export {
+  projectInfoSchema,
+  newProjectValidationSchema,
+  projectSchema,
+  projectsResponseSchema,
+};

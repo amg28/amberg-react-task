@@ -1,9 +1,12 @@
-import { forwardRef, useImperativeHandle } from "react";
+import { useImperativeHandle, Ref } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { TextField, Box, Grid2 as Grid } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useProjects } from "../hooks/useProjects";
-import { ProjectInfo, projectInfoSchema as schema } from "../data/schema";
+import {
+  ProjectInfo,
+  newProjectValidationSchema as schema,
+} from "../data/schema";
 import { zodResolver } from "@hookform/resolvers/zod/src/zod.js";
 import TemplateSelector from "./inputs/TemplateSelector";
 
@@ -11,7 +14,11 @@ export interface NewProjectFormRef {
   submitForm: () => void;
 }
 
-const NewProjectForm = forwardRef<NewProjectFormRef>((_, ref) => {
+interface NewProjectFormProps {
+  ref: Ref<NewProjectFormRef>;
+}
+
+const NewProjectForm = ({ ref }: NewProjectFormProps) => {
   const navigate = useNavigate();
   const { createProject } = useProjects();
 
@@ -88,6 +95,6 @@ const NewProjectForm = forwardRef<NewProjectFormRef>((_, ref) => {
       </Grid>
     </Box>
   );
-});
+};
 
 export default NewProjectForm;

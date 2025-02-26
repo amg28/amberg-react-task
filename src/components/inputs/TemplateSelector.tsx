@@ -2,7 +2,7 @@ import { Select, MenuItem, FormControl, InputLabel } from "@mui/material";
 import { FC } from "react";
 import { Control, Controller } from "react-hook-form";
 import { ProjectInfo, ProjectTemplate } from "../../data/schema";
-import { useProjectTemplates } from "../../hooks/useProjectTemplates";
+import { useProjectTemplatesQuery } from "../../hooks/useProjectTemplatesQuery";
 
 interface TemplateSelectorProps {
   control: Control<ProjectInfo>;
@@ -10,7 +10,9 @@ interface TemplateSelectorProps {
 }
 
 const TemplateSelector: FC<TemplateSelectorProps> = ({ control, name }) => {
-  const { templates, isLoading } = useProjectTemplates();
+  const { data = [], isLoading } = useProjectTemplatesQuery();
+
+  console.log({ data });
 
   return (
     <FormControl fullWidth>
@@ -23,7 +25,7 @@ const TemplateSelector: FC<TemplateSelectorProps> = ({ control, name }) => {
         disabled={isLoading}
         render={({ field }) => (
           <Select {...field} labelId="template-select-label">
-            {templates.map((template: ProjectTemplate) => (
+            {data.map((template: ProjectTemplate) => (
               <MenuItem key={template.id} value={template.id}>
                 {template.name}
               </MenuItem>
