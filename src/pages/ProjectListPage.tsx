@@ -4,28 +4,18 @@ import ProjectList from "../components/ProjectList";
 import {
   Box,
   Button,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
   styled,
   CircularProgress,
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import { useProjects } from "../hooks/useProjects";
+import Pagination from "../components/Pagination";
+import SortOrderSelect from "../components/SortOrderSelect";
 
 const StyledHeaderGroup = styled(Box)(({ theme }) => ({
   display: "flex",
   flexDirection: "row",
   gap: theme.spacing(1),
-}));
-
-const StyledDropDown = styled(FormControl)(({ theme }) => ({
-  display: "flex",
-  minWidth: theme.spacing(12),
-  color: theme.palette.primary.main,
-  backgroundColor: theme.palette.background.paper,
-  borderRadius: theme.shape.borderRadius,
 }));
 
 const ProjectListPage: FC = () => {
@@ -49,29 +39,23 @@ const ProjectListPage: FC = () => {
           <Button variant="contained" component={Link} to="/new">
             + New
           </Button>
-          <StyledDropDown variant="outlined">
-            <InputLabel>Order</InputLabel>
-            <Select value={direction} onChange={toggleSort} label="Order">
-              <MenuItem value={1}>A-Z</MenuItem>
-              <MenuItem value={-1}>Z-A</MenuItem>
-            </Select>
-          </StyledDropDown>
+         <SortOrderSelect direction={direction} toggleSort={toggleSort} />
         </StyledHeaderGroup>
       }
     >
       {isLoading ? (
-        <CircularProgress />
+        <Box display="flex" justifyContent="center" mt={2}>
+          <CircularProgress />
+        </Box>
       ) : (
         <>
           <ProjectList projects={projects} />
-          <Box display="flex" justifyContent="space-between" mt={2}>
-            <Button variant="contained" onClick={loadPrev} disabled={!hasPrev}>
-              Previous
-            </Button>
-            <Button variant="contained" onClick={loadNext} disabled={!hasNext}>
-              Next
-            </Button>
-          </Box>
+          <Pagination
+            loadPrev={loadPrev}
+            loadNext={loadNext}
+            hasPrev={hasPrev}
+            hasNext={hasNext}
+          />
         </>
       )}
     </PageLayout>

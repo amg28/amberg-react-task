@@ -24,7 +24,7 @@ const TemplateSelector: FC<TemplateSelectorProps> = ({ control, name }) => {
         control={control}
         disabled={isLoading}
         render={({ field }) => (
-          <Select {...field} labelId="template-select-label">
+          <Select {...field} labelId="template-select-label" required>
             {data.map((template: ProjectTemplate) => (
               <MenuItem key={template.id} value={template.id}>
                 {template.name}

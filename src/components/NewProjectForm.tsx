@@ -53,6 +53,7 @@ const NewProjectForm = ({ ref }: NewProjectFormProps) => {
                 {...field}
                 label="Name"
                 fullWidth
+                required
                 error={!!fieldState.error}
                 helperText={fieldState.error?.message}
               />
@@ -68,6 +69,7 @@ const NewProjectForm = ({ ref }: NewProjectFormProps) => {
                 {...field}
                 label="Line Section Name"
                 fullWidth
+                required
                 error={!!fieldState.error}
                 helperText={fieldState.error?.message}
               />
@@ -83,6 +85,7 @@ const NewProjectForm = ({ ref }: NewProjectFormProps) => {
                 {...field}
                 label="Track Name"
                 fullWidth
+                required
                 error={!!fieldState.error}
                 helperText={fieldState.error?.message}
               />
