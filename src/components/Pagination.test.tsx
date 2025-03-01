@@ -1,6 +1,7 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import Pagination from './Pagination';
 import { describe, it, expect, vi } from 'vitest';
+import userEvent from "@testing-library/user-event";
 
 describe('Pagination', () => {
     it('renders Previous and Next buttons', () => {
@@ -9,17 +10,19 @@ describe('Pagination', () => {
         expect(screen.getByText('Next')).toBeInTheDocument();
     });
 
-    it('calls loadPrev when Previous button is clicked', () => {
+    it('calls loadPrev when Previous button is clicked', async () => {
+        const user = userEvent.setup();
         const loadPrev = vi.fn();
         render(<Pagination loadPrev={loadPrev} loadNext={() => {}} hasPrev={true} hasNext={true} />);
-        fireEvent.click(screen.getByText('Previous'));
+        await user.click(screen.getByText('Previous'));
         expect(loadPrev).toHaveBeenCalled();
     });
 
-    it('calls loadNext when Next button is clicked', () => {
+    it('calls loadNext when Next button is clicked', async () => {
+        const user = userEvent.setup();
         const loadNext = vi.fn();
         render(<Pagination loadPrev={() => {}} loadNext={loadNext} hasPrev={true} hasNext={true} />);
-        fireEvent.click(screen.getByText('Next'));
+        await user.click(screen.getByText('Next'));
         expect(loadNext).toHaveBeenCalled();
     });
 

@@ -19,8 +19,8 @@ const SortOrderSelect: FC<SortOrderSelectProps> = ({direction, toggleSort}) => {
    
     return (
         <StyledDropDown variant="outlined">
-            <InputLabel>Order</InputLabel>
-            <Select value={direction} onChange={toggleSort} label="Order">
+            <InputLabel id="order-label">Order</InputLabel>
+            <Select value={direction} onChange={toggleSort} label="Order" labelId="order-label">
                 <MenuItem value={1}>A-Z</MenuItem>
                 <MenuItem value={-1}>Z-A</MenuItem>
             </Select>

@@ -24,7 +24,7 @@ describe("ProjectList", () => {
     expect(screen.getByText("Project Alpha")).toBeVisible();
     expect(screen.getByText("Project Beta")).toBeVisible();
 
-    // Ensuring that 2 ProjectCards are rendered
+    // Get all project cards by heading levels (each card has a project name)
     const projectCards = screen.getAllByRole("heading", { level: 6 });
     expect(projectCards).toHaveLength(mockProjects.length);
   });
@@ -32,7 +32,6 @@ describe("ProjectList", () => {
   it("should handle an empty project list gracefully", () => {
     render(<ProjectList projects={[]} />);
 
-    // Ensure no project cards are rendered
     const projectCards = screen.queryAllByRole("heading", { level: 6 });
     expect(projectCards).toHaveLength(0);
   });
@@ -40,7 +39,6 @@ describe("ProjectList", () => {
   it("should handle undefined project list safely", () => {
     render(<ProjectList projects={undefined} />);
 
-    // Ensure no errors occur and no project cards are rendered
     const projectCards = screen.queryAllByRole("heading", { level: 6 });
     expect(projectCards).toHaveLength(0);
   });
@@ -48,19 +46,17 @@ describe("ProjectList", () => {
   it("should display the correct last modified date for each project", () => {
     render(<ProjectList projects={mockProjects} />);
 
-    // Get all project cards by heading levels (each card has a project name)
     const projectCards = screen.getAllByRole("heading", { level: 6 });
 
     expect(projectCards).toHaveLength(mockProjects.length);
 
     mockProjects.forEach((project, index) => {
-      const cardContainer = projectCards[index].closest("div"); // Get the card div
+      const cardContainer = projectCards[index].closest("div");
 
       expect(projectCards[index]).toHaveTextContent(project.projectInfo.name);
 
       expect(within(cardContainer!).getByText("Modified:")).toBeVisible();
 
-      // Ensure the correct formatted date is displayed
       const expectedDate = format(new Date(project.modifiedDate), "PPpp");
       expect(within(cardContainer!).getByText(expectedDate)).toBeVisible();
     });

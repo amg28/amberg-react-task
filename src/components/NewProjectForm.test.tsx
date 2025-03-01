@@ -1,5 +1,5 @@
 import { render, screen, waitFor } from "@testing-library/react";
-import { describe, it, expect, beforeAll, afterAll, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import NewProjectForm, { NewProjectFormRef } from "./NewProjectForm";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter } from "react-router-dom";
@@ -8,51 +8,16 @@ import { createRef } from "react";
 import AxiosMockAdapter from "axios-mock-adapter";
 
 import { api } from "../services/apiService";
-import { ProjectInfo, ProjectTemplate } from "../data/schema";
-import TemplateSelector from "./inputs/TemplateSelector";
-import { useForm } from "react-hook-form";
+import { ProjectTemplate } from "../data/schema";
 
 const axiosMock = new AxiosMockAdapter(api);
 
-const mockRequestBody = {
+const testData = {
   name: "Project Riga",
   lineSectionName: "Line 1",
   trackName: "Track 1",
   number: '1',
   projectTemplateId: '1',
-};
-
-// Expected API Response (backend enriches the request)
-const mockApiResponse = {
-  id: "12b53627-83f0-4bce-b88c-4161a702e50d",
-  projectInfo: {
-    name: "Project Riga",
-    number: "1",
-  },
-  treeRoot: {
-    id: "12b53627-83f0-4bce-b88c-4161a702e50d",
-    name: "Root",
-    createdDate: "2025-03-01T15:15:25Z",
-    modifiedDate: "2025-03-01T15:15:25Z",
-    childs: [
-      {
-        id: "7f98139f-fdf6-466c-9130-9abf7a1f9b80",
-        name: "Line 1",
-        createdDate: "2025-03-01T15:15:25Z",
-        modifiedDate: "2025-03-01T15:15:25Z",
-        childs: [
-          {
-            id: "65fb42ba-f3dd-401e-b3a3-0d587b0f1246",
-            name: "Track 1",
-            createdDate: "2025-03-01T15:15:25Z",
-            modifiedDate: "2025-03-01T15:15:25Z",
-          },
-        ],
-      },
-    ],
-  },
-  createdDate: "2025-03-01T15:15:25Z",
-  modifiedDate: "2025-03-01T15:15:25Z",
 };
 
 const mockTemplateData: ProjectTemplate[] = [
@@ -63,8 +28,7 @@ const mockTemplateData: ProjectTemplate[] = [
 
 describe("NewProjectForm", () => {
   beforeEach(() => {
-    axiosMock.onPost("/project", mockRequestBody).reply(201, mockApiResponse);
-    axiosMock.onGet("/projectTemplate").reply(200, mockTemplateData);
+    axiosMock.onGet("/projectTemplate/list").reply(200, mockTemplateData);
   });
 
   afterEach(() => {
@@ -89,73 +53,24 @@ describe("NewProjectForm", () => {
     const ref = renderComponent();
    
     // Fill out the form
-    await user.type(screen.getByLabelText("Name"), "Project Riga");
-    await user.type(screen.getByLabelText("Line Section Name"), "Section 1");
-    await user.type(screen.getByLabelText("Track Name"), "Track A");
+    await user.type(screen.getByLabelText(/^Name/), testData.name);
+    await user.type(screen.getByLabelText(/Line Section Name/), testData.lineSectionName);
+    await user.type(screen.getByLabelText(/Track Name/), testData.trackName);
 
     // Select a template
-    const input = screen.getByLabelText("Select a Template");
-    expect(input).toBeVisible();
+    const input = screen.getByLabelText(/Select a Template/);
     await user.click(input);
-
-    await waitFor(() => {
-        expect(screen.getByText(mockTemplateData[0].name)).toBeVisible();
-        }
-    );
-    await user.selectOptions(screen.getByRole("listbox"), mockTemplateData[0].name);
+    await user.click(screen.getByText(mockTemplateData[0].name));
 
 
-    // Submit the form via ref
-    if (ref.current) {
-      ref.current.submitForm();
-    }
+    ref.current!.submitForm();
 
     await waitFor(() => {
       expect(axiosMock.history.post.length).toBe(1); // Ensure request was made
     });
 
-    // Verify request payload (what was sent)
+    expect(axiosMock.history.post[0].url).toEqual("/project");
     const requestData = JSON.parse(axiosMock.history.post[0].data);
-    expect(requestData).toEqual(mockRequestBody);
-
-    // Verify response (what API returned)
-    await waitFor(() => {
-      expect(axiosMock.history.post.length).toBe(1); // Ensure a request was made
-      expect(mockApiResponse.id).toBeDefined();
-      expect(mockApiResponse.projectInfo.name).toBe("Project Riga");
-      expect(mockApiResponse.treeRoot.name).toBe("Root");
-    });
+    expect(requestData).toEqual(testData);
   });
-
-//   it("should handle API errors", async () => {
-//     axiosMock.reset();
-//     axiosMock.onPost("/project", mockRequestBody).reply(500, { message: "Internal Server Error" });
-
-//     const ref = renderComponent();
-//     const user = userEvent.setup();
-
-//     // Fill out the form
-//     await user.type(screen.getByLabelText("Name"), "Project Riga");
-//     await user.type(screen.getByLabelText("Line Section Name"), "Section 1");
-//     await user.type(screen.getByLabelText("Track Name"), "Track A");
-
-//     // Submit the form via ref
-//     if (ref.current) {
-//       ref.current.submitForm();
-//     }
-
-//     await waitFor(() => {
-//       expect(axiosMock.history.post.length).toBe(1); // Ensure request was made
-//     });
-
-//     // Verify request payload (what was sent)
-//     const requestData = JSON.parse(axiosMock.history.post[0].data);
-//     expect(requestData).toEqual(mockRequestBody);
-
-//     // Verify response (what API returned)
-//     await waitFor(() => {
-//       expect(axiosMock.history.post.length).toBe(1); // Ensure a request was made
-//       expect(screen.getByText("Internal Server Error")).toBeInTheDocument();
-//     });
-//   });
 });

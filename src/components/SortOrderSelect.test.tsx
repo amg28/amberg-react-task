@@ -4,7 +4,7 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 import SortOrderSelect from "../components/SortOrderSelect";
 import { describe, it, expect, vi } from "vitest";
 
-const theme = createTheme(); // Create a default MUI theme
+const theme = createTheme();
 
 describe("SortOrderSelect component", () => {
   it("renders the dropdown with correct initial value", () => {
@@ -27,13 +27,8 @@ describe("SortOrderSelect component", () => {
 
     const user = userEvent.setup();
 
-    // Open the dropdown
-    const orderLabel = screen.queryByLabelText("Order");
-    if (orderLabel) {
-      await user.click(orderLabel);
-    }
-
-    // Select Z-A option
+    
+    await user.click(screen.getAllByLabelText("Order")[0]);
     await user.click(screen.getByRole("option", { name: "Z-A" }));
 
     expect(toggleSortMock).toHaveBeenCalled();
