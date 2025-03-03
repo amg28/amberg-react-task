@@ -1,50 +1,75 @@
-# React + TypeScript + Vite
+# Home Task
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project is a **Single Page Application (SPA)** built with **React 19, TypeScript, and Vite**. It leverages **React Compiler**, which optimizes applications by automatically memoizing values, reducing unnecessary re-renders, and improving performance without requiring manual optimizations.&#x20;
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## **Project Setup**
 
-## Expanding the ESLint configuration
+### **Installation**
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+Clone the repository and install dependencies:
 
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+```sh
+npm install
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+### **Starting the Development Server**
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+To start the project in development mode with Hot Module Replacement (HMR):
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+```sh
+npm run dev
 ```
+
+The app will be available at `http://localhost:3000/`.
+
+### **Running Tests**
+
+To run unit and integration tests with Vitest:
+
+```sh
+npm run test
+```
+
+To run tests in **UI mode**:
+
+```sh
+npm run test-ui
+```
+
+---
+
+## **Used Libraries**
+
+### **Core Technologies**
+
+- **React 19** – A declarative UI library for building fast and scalable applications.
+- **TypeScript** – Adds static typing to JavaScript for better maintainability and error prevention.
+- **Vite** – A lightning-fast development server and build tool with Hot Module Replacement (HMR).
+
+### **State Management & Data Fetching**
+
+- **@tanstack/react-query** – Simplifies data fetching, caching, and synchronization with minimal boilerplate.
+- **Axios** – A lightweight and feature-rich HTTP client for making API requests.
+
+### **UI & Styling**
+
+- **Material UI (MUI) 6** – A modern component library with built-in theming support.
+- **Styled-components** – Enables component-scoped styles with dynamic theming.
+- **Date-fns-tz** – Provides robust date manipulation with time zone support.
+
+### **Form Handling & Validation**
+
+- **React-hook-form** – Optimized form management with controlled and uncontrolled inputs.
+- **Zod** – Schema-based validation for form data and API responses.
+
+### **Routing**
+
+- **React-router-dom** – Enables dynamic and declarative routing for seamless navigation.
+
+### **Testing**
+
+- **Vitest** – A blazing-fast test runner with built-in support for mocking and assertions.
+- **Testing Library** – Provides utilities to test React components in a user-centric way.
+- **Axios-mock-adapter** – Simulates API responses for reliable testing of network requests.
