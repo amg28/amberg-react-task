@@ -14,23 +14,35 @@ export const api = axios.create({
   headers: { "Content-Type": "application/json" },
 });
 
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (axios.isAxiosError(error)) {
+      console.error("API Error:", {
+        message: error.message,
+        status: error.response?.status,
+        data: error.response?.data,
+        url: error.config?.url,
+      });
+    } else {
+      console.error("Unexpected Error:", error);
+    }
+    return Promise.reject(error);
+  }
+);
+
 export const getProjects = async (direction: number = 1, cursor?: string) => {
-  try {
     const url = cursor
       ? `/project/list/${cursor}`
       : `/project/list?direction=${direction}`;
 
     const response = await api.get(url);
 
-    return projectsResponseSchema.parse(response.data);
-  } catch (error) {
-    console.error("API Error:", error);
-    throw error;
-  }
+    return projectsResponseSchema.parse(response.data); 
 };
 
 export const createProject = async (projectData: ProjectInfo) => {
-  try {
+  
     projectInfoSchema.parse(projectData);
 
     const response = await api.post("/project", {
@@ -39,19 +51,13 @@ export const createProject = async (projectData: ProjectInfo) => {
     });
 
     return projectSchema.parse(response.data);
-  } catch (error) {
-    console.error("API Error:", error);
-    throw error;
-  }
+  
 };
 
 export const fetchProjectTemplates = async () => {
-  try {
+  
     const response = await api.get("/projectTemplate/list");
 
     return projectTemplateListSchema.parse(response.data);
-  } catch (error) {
-    console.error("Error fetching project templates:", error);
-    return [];
-  }
+  
 };

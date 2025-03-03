@@ -44,7 +44,7 @@ export const useProjects = () => {
         ? SortDirection.DESCENDING
         : SortDirection.ASCENDING
     );
-    setCursor(undefined); // Reset pagination when sorting changes
+    setCursor(undefined);
     refetch();
   };
 

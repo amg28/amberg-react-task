@@ -1,5 +1,4 @@
-// src/layout/PageLayout.tsx
-import React, { ReactNode } from "react";
+import { FC, ReactNode } from "react";
 import { Box, Container } from "@mui/material";
 import Header from "./Header";
 
@@ -9,7 +8,7 @@ interface PageLayoutProps {
   children: ReactNode;
 }
 
-const PageLayout: React.FC<PageLayoutProps> = ({
+const PageLayout: FC<PageLayoutProps> = ({
   subtitle,
   actions,
   children,
@@ -17,7 +16,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({
   return (
     <Container maxWidth="lg">
       <Header subtitle={subtitle} actions={actions} />
-      <Box sx={{ my: 2 }}>{children}</Box>
+      <Box sx={{ my: (theme) => theme.spacing(2) }}>{children}</Box>
     </Container>
   );
 };

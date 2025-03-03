@@ -22,7 +22,7 @@ const ProjectListPage: FC = () => {
   const {
     projects,
     isLoading,
-    // error,
+    error,
     loadNext,
     loadPrev,
     hasNext,
@@ -44,8 +44,12 @@ const ProjectListPage: FC = () => {
       }
     >
       {isLoading ? (
-        <Box display="flex" justifyContent="center" mt={2}>
+        <Box display="flex" justifyContent="center" mt={(theme) => theme.spacing(2)}>
           <CircularProgress />
+        </Box>
+      ) : error ? (
+        <Box color={(theme) => theme.palette.error.main} textAlign="center" mt={(theme) => theme.spacing(2)}>
+          Failed to load projects. Please try again.
         </Box>
       ) : (
         <>

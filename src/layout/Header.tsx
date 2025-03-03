@@ -1,5 +1,4 @@
-// src/layout/Header.tsx
-import React, { ReactNode } from "react";
+import { FC, ReactNode } from "react";
 import { Box, Typography, Stack, styled, Divider } from "@mui/material";
 import { Link } from "react-router-dom";
 
@@ -16,7 +15,7 @@ const StyledHeaderContainer = styled(Box)(({ theme }) => ({
   margin: theme.spacing(1, 2),
 }));
 
-const Header: React.FC<HeaderProps> = ({ subtitle, actions }) => {
+const Header: FC<HeaderProps> = ({ subtitle, actions }) => {
   return (
     <Box>
       <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
